@@ -20,3 +20,5 @@ Everything is Empty.
 看书30分钟
 
 继续研究edk2（项目）
+
+一天不写代码就不会写了。。
