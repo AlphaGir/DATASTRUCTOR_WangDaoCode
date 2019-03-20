@@ -15,7 +15,6 @@
  *
  * 输入：中缀表达式
  * 输出：后缀表达式
- * 失误：后缀表达式每次需要添加，选择的数据结构不好，应该选择队列 或者数组，之类 有空再改
  */
 #include<stdio.h>
 #include<string.h>
@@ -39,11 +38,10 @@ void construct(char *s)
 	int len=strlen(s);
 	for(i=0;i<len;i++)
 	{
-		printf("op:%d  postfix:%d\n",op.top,postfix.top);
 		if(s[i]!='+'&&s[i]!='-'&&s[i]!='*'&&s[i]!='/'&&s[i]!='('&&s[i]!=')')
 		{
 			push(&postfix,s[i]);//如果是操作数加入后缀表达式栈
-			printf("push postfix:%c\n",s[i]);
+			printf("%c ",s[i]);
 		}
 		else if(s[i]=='+'||s[i]=='-'||s[i]=='*'||s[i]=='/'||s[i]=='('||s[i]==')')
 		{
@@ -55,7 +53,6 @@ void construct(char *s)
 			{
 				pop(&op,s[i],&postfix);
 				/*如果是)则依次把栈中运算符加入后缀表达式，直到出现(,从栈里删除(*/
-				//printf("pop:v:%c\n",s[i]);
 			}
 			else
 			{
@@ -63,20 +60,15 @@ void construct(char *s)
 				/* 如果优先级高于栈顶元素则入栈，否则从栈顶开始依次弹出比当前运算符优先级高或者相等的运算符直到遇见比它优先级低的或者遇到一个左括号为止，然后将其压入栈*/
 			}
 		}
-		//print(&postfix);
 	}
 	print(&postfix,&op);//
 }
 void judge(stack *s,char c,stack *s1)//似乎需要enum
 {
 	char op=s->data[s->top];
-	if(op=='(')
-	{
-		push(s,c);
-	}
+	if(op=='(') push(s,c);
 	else
-	{
-		switch(c)
+        	switch(c)
 		{
 			case '+':pop(s,c,s1);break;
 			case '-':pop(s,c,s1);break;
@@ -85,43 +77,30 @@ void judge(stack *s,char c,stack *s1)//似乎需要enum
 			case '/':if(op=='+'||op=='-') push(s,c);
                                  else pop(s,c,s1);break;
 		}
-	}
 }
 void print(stack *s,stack *s1)
 {
-	printf("后缀表达式:");
 	while(s1->top>=0)
 	{
 		printf("%c",s1->data[s1->top]);
 		s1->top--;
 	}
-	while(s->top>=0)
-	{
-		printf("%c",s->data[s->top]);
-		s->top--;
-	}
-	//printf("tt:%c\n",s1->data[s1->top]);
-
+	printf("\n");
 }
 void push(stack *s,char c)
 {
 	s->data[++s->top]=c;
-	printf("push v:%c\n",c);
 }
 void pop(stack *s,char c,stack *s1)
 {
-	char in;
 	if(c==')')
 	{
 		while(s->data[s->top]!='(')
 		{
 			push(s1,s->data[s->top]);
-		        printf("pos:");
-			//push(s1,in);
+			printf("%c ",s->data[s->top]);
 			s->top--;
-			
 		}
-		printf("value:%c\n",s->data[s->top]);
 		s->data[s->top--];
 	}
 	else// c 为 + - 没有用的op 或者 c为 * / op为* /都没用
@@ -133,14 +112,13 @@ void pop(stack *s,char c,stack *s1)
 		if(c=='+'||c=='-')
 		while(s->top>=0)
 		{
-			printf("head:%c\n",s->data[s->top]);
 			if(s->data[s->top]=='(') break;
 			else
 			{
-			//s->data[s->top]=in;
+			//s->data[s->top]=in; 左值 右值 
 			push(s1,s->data[s->top]);
+			printf("%c ",s->data[s->top]);
 			s->top--;
-			//push(s1,in);
 			}
 		}
 		else
@@ -150,7 +128,8 @@ void pop(stack *s,char c,stack *s1)
 				if(s->data[s->top]=='('||s->data[s->top]=='+'||s->data[s->top]=='-') break;
 				else
 				{
-				push(s1,s->data[s->top]);
+				push(s1,s->data[s->top]);				                        printf("%c ",s->data[s->top]);
+
 				s->top--;
 				}
 				
@@ -160,11 +139,8 @@ void pop(stack *s,char c,stack *s1)
 		}
 		}
 		else
-		{
 			push(s,c);
-		}
 	}	
-	
 }
 int main()//shit 
 {
