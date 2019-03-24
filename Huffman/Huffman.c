@@ -21,6 +21,7 @@ typedef struct wordnum
 {
 	int num;
 	char c;
+	int tag;
 }wordnum,*word;
 void select1(huff *h,int n,int *s1,int *s2);
 void huff_code(huff *h,int n)//还真的得用回溯，，，
@@ -28,11 +29,11 @@ void huff_code(huff *h,int n)//还真的得用回溯，，，
     int i,j,c,f;
     for(i=0;i<n;i++)
     {
-	char t[100];
+	char t[n];
 	int l=0;
 	c=i;
 	f=h[i].parent;
-	while(f!=0)
+	while(f!=-1)
 	{
 		//l++;
 		if(h[f].lc==c) 
@@ -44,17 +45,18 @@ void huff_code(huff *h,int n)//还真的得用回溯，，，
 	}
         t[l]='\0';
 	printf("t:%s\n",t);
-	for(j=l-2;j>=0;j--)
+	for(j=l-1;j>=0;j--)
 	{
 		h[i].s[h[i].len]=t[j];
 		h[i].len++;
 	}
+	h[i].s[h[i].len]='\0';
     }
     
 }
 
 
-void huff_create(huff *h,int n)//有n个带权节点需要构成一棵哈夫曼树
+void huff_create(huff *h,int n,wordnum *w)//有n个带权节点需要构成一棵哈夫曼树
 {
 	int m;
 	int x[100];
@@ -71,8 +73,9 @@ void huff_create(huff *h,int n)//有n个带权节点需要构成一棵哈夫曼�
 	}
 	for(i=0;i<n;i++)
 	{
-		scanf("%d",&h[i].wight);
-		x[i]=h[i].wight;
+		//scanf("%d",&h[i].wight);
+		h[i].code=w[i].c;
+		h[i].wight=w[i].num;
 	}
 	for(i=n;i<m;++i)
 	{
@@ -87,10 +90,10 @@ void huff_create(huff *h,int n)//有n个带权节点需要构成一棵哈夫曼�
 		//a++;
 		//b++;
 	}
-	/*for(j=0;j<m;j++)
+	for(j=0;j<m;j++)
 	{
-		printf("id=%d wight:%d \n",j,h[j].wight);
-	}*/
+		printf("id=%d wight:%d parent:%d code:%c rc:%d lc:%d\n",j,h[j].wight,h[j].parent,h[j].code,h[j].rc,h[j].lc);
+	}
 	//return h;
 }
 
@@ -157,38 +160,73 @@ void select1(huff *h,int n,int *s1,int *s2)//可以更简略 但是 总是写得
 }
 void press(char *origin,huff *h,char *new)//origin为原来的未压缩的，new为压缩的
 {
-	
+	int i,j;
+	for(i=0;i<strlen(origin);i++)
+	{
+		if(origin[i]==h[j].code)
+
+}
+void unpress()//解压
+{
+
 }
 void print(huff *h,int n)
 {
 	int i;
 	for(i=0;i<n;i++)
 	{
-		printf("id=%d wight=%d code:%s\n",i,h[i].wight,h[i].s);
+		printf("id=%d wight=%d c:%c code:%s\n",i,h[i].wight,h[i].code,h[i].s);
 	}
 }
-void count(wordnum *w,char *s)//计算一句话字符出现次数
+int count(wordnum *w,char *s,char *old)//计算一句话字符出现次数
 {
 	int i,j,t;
 	t=0;
+	j=0;
 	for(i=0;i<strlen(s);i++)
 	{
-		wordnum[i].c=s[i];
-		wordnum[i].num++;
-		if(s[i]
+		w[i].tag=0;
+		w[i].num=1;
+		old[i]=s[i];
+	}
+	old[i]='\0';
+	for(i=0;i<strlen(s);i++)
+	{
+	        if(w[i].tag==0&&s[i]!='0')
+		{
+			t++;
+		for(j=i+1;j<strlen(s);j++)
+		{
+			if(s[i]==s[j]&&w[i].tag==0)
+			{
+				w[i].c=s[i];
+				w[i].num++;
+				s[j]='0';
+			}
+		}
+		w[i].tag=1;
+		}
+	}
+	for(i=0;i<t;i++)
+		printf("%c %d\n",w[i].c,w[i].num);
+	return t;
+}
 		
 int main()
 {
 	char sentence[100];
 	printf("测试的英文语句:\n");
 	scanf("%s",sentence);
-	int length;
+	char old[100];
+	//strcpy(old,sentence);
+	int length,l;
 	length=strlen(sentence);
 	wordnum w[length];
-	count(w,sentence);
-	huff h[100];
-	huff_create(h,8);
+	l=count(w,sentence,old);
+	huff h[l];
+	huff_create(h,l,w);
 	//printf("test:%d",h[0].wight);
-	huff_code(h,8);
-	print(h,8);
+	huff_code(h,l);
+	print(h,l);
+	//printf("%d %s",l,old);
 }
