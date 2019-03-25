@@ -35,7 +35,6 @@ void huff_code(huff *h,int n)//还真的得用回溯，，，
 	f=h[i].parent;
 	while(f!=-1)
 	{
-		//l++;
 		if(h[f].lc==c) 
 			t[l]='0';
 		else
@@ -44,7 +43,6 @@ void huff_code(huff *h,int n)//还真的得用回溯，，，
 		l++;
 	}
         t[l]='\0';
-	printf("t:%s\n",t);
 	for(j=l-1;j>=0;j--)
 	{
 		h[i].s[h[i].len]=t[j];
@@ -62,7 +60,6 @@ void huff_create(huff *h,int n,wordnum *w)//有n个带权节点需要构成一�
 	int x[100];
 	int s1,s2;
 	m=2*n-1;
-	//h=(huff*)malloc(sizeof(huff)*m);
 	int i,j,t;
 	for(i=0;i<m;i++)
 	{
@@ -73,7 +70,6 @@ void huff_create(huff *h,int n,wordnum *w)//有n个带权节点需要构成一�
 	}
 	for(i=0;i<n;i++)
 	{
-		//scanf("%d",&h[i].wight);
 		h[i].code=w[i].c;
 		h[i].wight=w[i].num;
 	}
@@ -87,14 +83,7 @@ void huff_create(huff *h,int n,wordnum *w)//有n个带权节点需要构成一�
 		h[i].wight=h[s1].wight+h[s2].wight;
 		h[i].lc=s1;
 		h[i].rc=s2;
-		//a++;
-		//b++;
 	}
-	for(j=0;j<m;j++)
-	{
-		printf("id=%d wight:%d parent:%d code:%c rc:%d lc:%d\n",j,h[j].wight,h[j].parent,h[j].code,h[j].rc,h[j].lc);
-	}
-	//return h;
 }
 
 void sort(int *x,int n)
@@ -122,8 +111,6 @@ void select1(huff *h,int n,int *s1,int *s2)//可以更简略 但是 总是写得
 	int a,b;
         for(i=0;i<=n;i++)
         {
-	//	printf("--------------------\n");
-	//	printf("id=%d %d %d\n",i,h[i].wight,h[i].parent);
 		if(h[i].parent!=-1) continue;
 		if(h[i].parent==-1)
 		{
@@ -155,20 +142,55 @@ void select1(huff *h,int n,int *s1,int *s2)//可以更简略 但是 总是写得
 	
 	*s1=a;
 	*s2=b;
-	//printf("%d %d\n",*s1,*s2);
-	
 }
-void press(char *origin,huff *h,char *new)//origin为原来的未压缩的，new为压缩的
+void press(char *origin,huff *h,char *new,int n)//origin为原来的未压缩的，new为压缩的
 {
 	int i,j;
+	int start,end;
+	start=0;
 	for(i=0;i<strlen(origin);i++)
 	{
-		if(origin[i]==h[j].code)
+		for(j=0;j<n;j++)
+		{
+			if(h[j].code==origin[i])
+			{
+				int len=strlen(h[j].s);
+				memcpy(new+start,h[j].s,len);
+				start=start+len;
+			}
+		}
+	}
+	new[start]='\0';
 
 }
-void unpress()//解压
+void unpress(char *new,huff *h,int n,char *o)//
 {
-
+	int i,j,f,p,t;
+	char x[n];
+	int c;
+	int m=2*n-1;
+	p=0;
+	int length=0;
+	c=m-1;
+	for(i=0;i<strlen(new);i++)
+	{
+		  t=new[i];
+		  if(t=='0')
+		  {
+		     c=h[c].lc;
+		  }
+		  else
+		  {
+			c=h[c].rc;
+                  }
+		  if(h[c].lc==0&&h[c].rc==0)
+		  {
+				  o[p++]=h[c].code;
+				  c=m-1;
+		  }
+	}
+	o[p]='\0';
+	
 }
 void print(huff *h,int n)
 {
@@ -178,7 +200,7 @@ void print(huff *h,int n)
 		printf("id=%d wight=%d c:%c code:%s\n",i,h[i].wight,h[i].code,h[i].s);
 	}
 }
-int count(wordnum *w,char *s,char *old)//计算一句话字符出现次数
+int count(wordnum *w,char *s,char *old)
 {
 	int i,j,t;
 	t=0;
@@ -207,26 +229,25 @@ int count(wordnum *w,char *s,char *old)//计算一句话字符出现次数
 		w[i].tag=1;
 		}
 	}
-	for(i=0;i<t;i++)
-		printf("%c %d\n",w[i].c,w[i].num);
 	return t;
 }
 		
 int main()
 {
 	char sentence[100];
-	printf("测试的英文语句:\n");
+	printf("测试数据:");
 	scanf("%s",sentence);
 	char old[100];
-	//strcpy(old,sentence);
+	char new[100];
 	int length,l;
 	length=strlen(sentence);
 	wordnum w[length];
 	l=count(w,sentence,old);
 	huff h[l];
 	huff_create(h,l,w);
-	//printf("test:%d",h[0].wight);
 	huff_code(h,l);
-	print(h,l);
-	//printf("%d %s",l,old);
+	press(old,h,new,l);
+	printf("压缩编码:%s\n",new);
+	unpress(new,h,l,old);
+	printf("解压后原数据:%s\n",old);
 }
