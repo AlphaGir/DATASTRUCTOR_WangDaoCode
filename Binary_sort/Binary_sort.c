@@ -43,6 +43,63 @@ binary insert(binary B,int n)
 	}
 	return B;
 }
+binary delete(binary B,int n)
+{
+	binary p,f,q,s;
+	p=(binary)malloc(sizeof(Binary));
+	f=(binary)malloc(sizeof(Binary));
+	q=(binary)malloc(sizeof(Binary));
+	s=(binary)malloc(sizeof(Binary));
+	p=B;
+	f=0;
+	while(p)
+	{
+//		f=p;
+		if(p->value==n) break;
+		f=p;
+		if(p->value>n) 
+			p=p->left;
+		else
+			p=p->right;
+	}
+	if(!p) return B;
+	q=p;
+	if(p->left!=0&&p->right!=0)
+	{
+		s=p->left;
+		while(s->right)
+		{
+			q=s;
+			s=s->right;
+		}
+		p->value=s->value;
+		if(q!=p) q->right=s->left;
+		else q->left=s->left;
+		//free(s);
+		return B;
+	}
+	else if(!p->right)
+	{
+		p=p->left;
+	}
+	else if(!p->left)
+	{
+		p=p->right;
+	}
+	if(!f) B=p;
+	else if(q==f->left) f->left=p;
+	else f->right=p;
+	return B;
+}
+binary search(binary B,int key)//此处如果是int 直接search(B->left|right,key)则不能找到，改成返回值就可以 这是为什么呢。
+{
+	if(B)
+	{
+		if(B->value==key) return B;
+		else if(key>B->value) return search(B->right,key);
+		else return search(B->left,key);
+	}
+}
 void print(binary B)
 {
 	if(B)
@@ -58,5 +115,9 @@ int main()
 	binary b,s;
 	s=create(b,a,7);
 	print(s);
+	b=delete(s,24);
+	printf("\n");
+	print(b);
+	//printf("ret:%d\n",b->value);
 }
 
