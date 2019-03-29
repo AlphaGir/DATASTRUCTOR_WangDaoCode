@@ -43,6 +43,134 @@ binary insert(binary B,int n)
 	}
 	return B;
 }
+binary delete1(binary B,int n)
+{
+	binary p,q,l,r,h;
+	p=(binary)malloc(sizeof(Binary));
+	p=B;
+	q=(binary)malloc(sizeof(Binary));
+	q=p;
+	l=(binary)malloc(sizeof(Binary));
+	r=(binary)malloc(sizeof(Binary));
+	h=(binary)malloc(sizeof(Binary));
+	while(p)
+	{
+
+		if(p->value==n) break;
+		q=p;
+		if(p->value>n) p=p->left;
+		else p=p->right;
+	}
+	if(!p) 
+	{
+		printf("没有找到\n");
+		return B;
+	}
+	if(p->left==0&&p->right!=0)
+	{
+		                        printf("\n删除的是右边叶子节点\n");
+		//p->value=p->right->value;
+		if(p==q->left)
+		{
+		p=p->right;
+		q->left=p;
+		}
+		else
+		{
+			p=p->right;
+			q->right=p;
+		}
+		
+	}
+	else if(p->right==0&&p->left!=0)
+	{
+		                        printf("\n删除的是左边叶子节点\n");
+//		p=p->left;
+		if(p==q->left)
+                {
+              p=p->left;
+                q->left=p;
+                }
+                else
+                {
+                        p=p->left;
+                        q->right=p;
+                }
+
+	}
+	else if(p->left==0&&p->right==0)
+	{
+		                        printf("\n删除的是叶子节点\n");
+					if(p==q->left)
+                {
+                p=0;
+                q->left=p;
+                }
+                else
+                {
+                        p=0;
+                        q->right=p;
+                }
+
+		//p=0;
+	}
+	else if(p==B)//根节点 既可以选择左子树最大的节点或者右子树最小节点）删除根节点就是修改了根节点值 删掉左子树最大节点
+	{
+		printf("\n删除的是根节点\n");
+		l=p->left;
+		if(l->right!=0)
+		{
+		while(l->right)
+		{	
+			q=l;
+			l=l->right;
+		}
+		p->value=l->value;
+		q->right=0;
+		//l=0;
+		}
+		else
+		{
+			r=B->right;
+			B=l;
+			B->right=r;
+		}
+	}
+	else //非根节点
+	{
+		if(p==q->left)//删掉的是左子树
+		{
+			printf("\n删除的是左子树\n");
+			q=p;
+		//printf("only left\n");
+			l=p->right;
+			while(l->right)
+			{	
+				q=l;
+				l=l->right;
+			}
+			p->value=l->value;
+			q->right=NULL;
+			//free(l);
+			return B;
+		}
+		else if(p==q->right)
+		{	
+			                        printf("\n删除的是右子树\n");
+			q=p;
+			r=p->left;
+			while(r->left)
+			{
+				q=r;
+				r=r->left;
+			}
+			p->value=r->value;
+			q->left=0;
+		}
+	}
+	return B;
+}
+
 binary delete(binary B,int n)
 {
 	binary p,f,q,s;
@@ -111,11 +239,11 @@ void print(binary B)
 }
 int main()
 {
-	int a[]={45,24,53,45,12,24,90};
+	int a[]={45,24,53,52,45,12,0,1,3,25,24,90};
 	binary b,s;
-	s=create(b,a,7);
+	s=create(b,a,12);
 	print(s);
-	b=delete(s,24);
+	b=delete1(s,53);
 	printf("\n");
 	print(b);
 	//printf("ret:%d\n",b->value);
