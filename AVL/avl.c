@@ -11,7 +11,7 @@ struct avlnode
 	avltree right;
 	int height;
 };
-static int Height(position p)
+int Height(position p)
 {
 	if(p==0)
 		return -1;
@@ -22,7 +22,7 @@ int max(int a,int b)
 {
 	return a>b?a:b;
 }
-static position SingleRotateWithLeft(position k2)
+position SingleRotateWithLeft(position k2)
 {
 	position k1;
 	k1=k2->left;
@@ -32,7 +32,7 @@ static position SingleRotateWithLeft(position k2)
 	k1->height=max(Height(k1->left),k2->height)+1;
 	return k1;
 }
-static position SingleRotateWithRight(position k5)
+position SingleRotateWithRight(position k5)
 {	
 	position k6;
 	k6=k5->right;
@@ -42,15 +42,14 @@ static position SingleRotateWithRight(position k5)
 	k6->height=max(Height(k6->right),k5->height)+1;
 	return k6;
 }
-
-static position DoubleRotateWithLeft(position k3)
+position DoubleRotateWithLeft(position k3)
 {
 	k3->left=SingleRotateWithRight(k3->left);
 	return SingleRotateWithLeft(k3);
 }
-static position DoubleRotateWithRight(position k4)
+position DoubleRotateWithRight(position k4)
 {
-	k4->left=SingleRotateWithLeft(k4->right);
+	k4->right=SingleRotateWithLeft(k4->right);
 	return SingleRotateWithRight(k4);
 }
 avltree insert(int x,avltree t)
@@ -98,20 +97,20 @@ avltree create(int *a,int n,avltree b)
 	}
 	return b;
 }
-
 void print(avltree t)
 {
 	if(t)
 	{
+		//print(t->left);
+		printf("value:%d height:%d \n",t->e,t->height);
 		print(t->left);
-		printf("%d ",t->e);
 		print(t->right);
 	}
 }
 		
 int main()
 {
-	int a[]={4,3,5,1,2};
+	int a[]={13,24,37,90,53};
 	int i;
 	avltree t,p;
 	p=create(a,5,t);
