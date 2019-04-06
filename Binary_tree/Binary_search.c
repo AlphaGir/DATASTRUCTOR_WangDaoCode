@@ -72,6 +72,61 @@ bino createBi()//递归创建二叉树
 	}
 	return B;
 }
+
+bino swap(bino B)
+{
+	if(B)
+	{
+		bino t=(bino)malloc(sizeof(binode));
+		t=B->left;
+		B->left=B->right;
+		B->right=t;
+		swap(B->left);
+		swap(B->right);
+	}
+	return B;
+}
+bino delete_x(bino B,int x)
+{
+	if(B)
+	{
+		if(B->data==x) B=0;
+		B->left=delete_x(B->left,x);
+		B->right=delete_x(B->right,x);
+	}
+	return B;
+}
+bino swap1(bino B)
+{
+	if(B)
+	{
+		bino t=(bino)malloc(sizeof(binode));
+		swap(B->left);
+		swap(B->right);
+		t=B->left;
+		B->left=B->right;
+		B->right=t;
+	}
+	return B;
+}
+//int static i=1;
+void search_pre(bino B,int k)
+{
+	//int a;
+	if(B)
+	{
+		k--;
+		if(k==0) 
+		{
+			printf("%d",B->data);
+			//return B->data;
+			exit(0);
+		}
+		search_pre(B->left,k);
+		search_pre(B->right,k);
+		
+	}
+}
 void search_Mid(bino B)//中序递归遍历二叉树
 {
 	if(B)
@@ -122,6 +177,13 @@ int main()
 	binode B;
 	bino p,p2;
 	p=createBi();
+	p2=delete_x(p,3);
+	//search_pre(p,1);
+	//printf("ret:%d\n",ret);
+	//p2=swap(p);
+	//search_Mid(p2);
+
+	//search_Mid(p2);
 	//int h=depth(B);
 	//prin("\n");
 	//printf("中序遍历为:\n");
@@ -130,6 +192,6 @@ int main()
 	//search_Mid_no(p);
 	//p2=copy(p,&B);
 	//search_Mid(p2);
-	int sum=count(p);
-	printf("sum:%d\n",sum);
+	//int sum=count(p);
+	//printf("sum:%d\n",sum);
 }
