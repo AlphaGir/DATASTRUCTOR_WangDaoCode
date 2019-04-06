@@ -86,16 +86,6 @@ bino swap(bino B)
 	}
 	return B;
 }
-bino delete_x(bino B,int x)
-{
-	if(B)
-	{
-		if(B->data==x) B=0;
-		B->left=delete_x(B->left,x);
-		B->right=delete_x(B->right,x);
-	}
-	return B;
-}
 bino swap1(bino B)
 {
 	if(B)
@@ -147,6 +137,10 @@ bino pop(sta p,bino d)
 	d=p->da[p->top--];
 	return d;
 }
+bino top(sta p)
+{
+	return p->da[p->top];
+}
 void search_Mid_no(bino B)
 {
 	stack t;
@@ -172,13 +166,51 @@ void search_Mid_no(bino B)
 		}
 	}
 }
+void search_post(bino B)//后序非递归遍历
+{
+	stack t;
+	sta s=&t;
+	t.top=-1;
+	bino p,r,p1;
+	p=B;
+	r=(bino)malloc(sizeof(binode));
+	r=0;
+	p1=(bino)malloc(sizeof(binode));
+
+	while(p||s->top>-1)
+	{
+		if(p)
+		{
+			push(s,p);
+			p=p->left;
+		}
+		else
+		{
+			p=top(s);
+			if(p->right&&p->right!=r)
+			{
+			  p=p->right;
+	  		  push(s,p);
+			  p=p->left;
+			}
+      			else
+			{
+			 p=pop(s,p1);
+ 			 printf("value:%d",p->data);
+			 r=p;
+			 p=0;
+			}
+		}
+	}
+}	
+
 int main()
 {
 	binode B;
 	bino p,p2;
-	p=createBi();
-	p2=delete_x(p,3);
-	//search_pre(p,1);
+	p=createBi();//先序创建二叉树
+	//p2=delete_x(p,3);
+	search_post(p);
 	//printf("ret:%d\n",ret);
 	//p2=swap(p);
 	//search_Mid(p2);
