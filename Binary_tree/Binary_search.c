@@ -40,6 +40,8 @@ bino dequeue(que q,bino p)
 
 bino createBi();//递归创建二叉树
 void search_Mid(bino B);//中序递归遍历二叉树
+void push(sta p,bino d);
+bino pop(sta p,bino d);
 void search_hierarchy(bino B)//二叉树层次遍历 1.构建一个顺序队列 将元素依次入
 {
 	queue qu;
@@ -58,6 +60,62 @@ void search_hierarchy(bino B)//二叉树层次遍历 1.构建一个顺序队列 
 			enqueue(q,p->right);
 	  }while(q->front!=q->rear);
 }
+void search_reverse_hierarchy(bino B)//从下到上 从右到左遍历二叉树。构建队列 栈。
+{
+	queue qu;
+        que q=&qu;
+        q->front=-1;
+        q->rear=-1;
+	 stack t;
+        sta s;
+        s=&t;
+        t.top=-1;
+        if(!B) return ;
+        bino p=(bino)malloc(sizeof(binode));
+        enqueue(q,B);
+        do{
+                p=dequeue(q,p);
+		push(s,p);
+    //            printf("value:%d\n",p->data);
+                if(p->left)
+                        enqueue(q,p->left);
+                if(p->right)
+                        enqueue(q,p->right);
+          }while(q->front!=q->rear);
+	while(s->top!=-1)
+	{
+		p=pop(s,p);
+		printf("value:%d",p->data);
+	}
+
+}
+int count_hierarchy(bino B)//非递归记录二叉树层次  
+{
+	queue qu;
+	que q=&qu;
+	q->front=-1;
+	q->rear=-1;
+	int leavel=0;
+	int last=0;
+	bino p=(bino)malloc(sizeof(binode));
+	if(!B) return 0;
+	enqueue(q,B);
+    do
+    {
+	p=dequeue(q,p);
+	if(p->left)
+		enqueue(q,p->left);
+	if(p->right)
+		enqueue(q,p->right);
+	if(q->front==last)
+	{
+		leavel++;
+		last=q->rear;
+	}
+    }while(q->front<q->rear);
+    return leavel;
+}
+	
 int iscomplete(bino T)//判断二叉树是不是完全二叉树
 {
 	queue qu;
@@ -273,11 +331,14 @@ int main()
 	binode B;
 	bino p,p2;
 	p=createBi();//先序创建二叉树
-	//int ret=iscomplete(p);
-	search_hierarchy(p);
+	int ret=count_hierarchy(p);
+	//search_hierarchy(p);
+	
+	//printf("\n");
+	//search_reverse_hierarchy(p);
 	//p2=delete_x(p,3);
 	//search_post(p);
-	//printf("ret:%d \n",ret);
+	printf("ret:%d \n",ret);
 	//p2=swap(p);
 	//search_Mid(p2);
 
