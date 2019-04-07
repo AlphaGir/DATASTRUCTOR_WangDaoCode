@@ -22,8 +22,72 @@ typedef struct stack
 	int top;
 	bino da[maxsize];
 }stack,*sta;
+typedef struct queue
+{
+	int front;
+	int rear;
+	bino da[maxsize];
+}queue,*que;
+void enqueue(que q,bino p)
+{
+	q->da[++q->rear]=p;
+}
+bino dequeue(que q,bino p)
+{
+	p=q->da[++q->front];
+	return p;
+}
+
 bino createBi();//递归创建二叉树
 void search_Mid(bino B);//中序递归遍历二叉树
+void search_hierarchy(bino B)//二叉树层次遍历 1.构建一个顺序队列 将元素依次入
+{
+	queue qu;
+	que q=&qu;
+	q->front=-1;
+	q->rear=-1;
+	if(!B) return ;
+	bino p=(bino)malloc(sizeof(binode));
+	enqueue(q,B);
+	do{
+		p=dequeue(q,p);	
+		printf("value:%d\n",p->data);
+		if(p->left)
+			enqueue(q,p->left);
+		if(p->right)
+			enqueue(q,p->right);
+	  }while(q->front!=q->rear);
+}
+int iscomplete(bino T)//判断二叉树是不是完全二叉树
+{
+	queue qu;
+	que q=&qu;
+	q->front=-1;
+	q->rear=-1;
+	if(!T) return 1;
+	bino p=(bino)malloc(sizeof(binode));
+	p=T;
+	enqueue(q,p);
+	do
+	{
+		p=dequeue(q,p);
+		if(p)
+		{
+			enqueue(q,p->left);
+			enqueue(q,p->right);
+		}
+		else
+		{
+			do
+			{
+				p=dequeue(q,p);
+				if(p)
+					return 0;
+			}while(q->front!=q->rear);
+		}
+	}while(q->front!=q->rear);
+	return 1;
+}
 bino copy(bino B,bino B1)
 {
 	if(B)
@@ -209,9 +273,11 @@ int main()
 	binode B;
 	bino p,p2;
 	p=createBi();//先序创建二叉树
+	//int ret=iscomplete(p);
+	search_hierarchy(p);
 	//p2=delete_x(p,3);
-	search_post(p);
-	//printf("ret:%d\n",ret);
+	//search_post(p);
+	//printf("ret:%d \n",ret);
 	//p2=swap(p);
 	//search_Mid(p2);
 
