@@ -22,12 +22,66 @@ typedef struct stack
 	int top;
 	bino da[maxsize];
 }stack,*sta;
+typedef struct
+{
+	bino t;
+	int tag;
+}stack1;
 typedef struct queue
 {
 	int front;
 	int rear;
 	bino da[maxsize];
 }queue,*que;
+// 层次遍历找到结点最多的那一层 21:50
+typedef struct
+{
+	bino data[maxsize];
+	int level[maxsize];
+	int front,rear;
+}qu;
+int width(bino b)
+{
+	bino p=(bino)malloc(sizeof(binode));
+	int k,max,i,n;
+	qu qu;
+	qu.front=qu.rear=-1;
+	qu.rear++;
+	qu.data[qu.rear]=b;
+	qu.level[qu.rear]=-1;
+	while(qu.front<qu.rear)
+	{
+		qu.front++;
+		p=qu.data[qu.front];
+		k=qu.level[qu.front];
+		if(p->left!=0)
+		{
+			qu.rear++;
+			qu.data[qu.rear]=p->left;
+			qu.level[qu.rear]=k+1;
+		}
+		if(p->right!=0)
+		{
+			qu.rear++;
+			qu.data[qu.rear]=p->right;
+			qu.level[qu.rear]=k+1;
+		}
+	}
+	max=0;i=0;
+	k=1;
+	while(i<=qu.rear)
+	{
+		n=0;
+		while(i<=qu.rear&&qu.level[i]==k)
+		{
+			n++;
+			i++;
+		}
+		k=qu.level[i];
+		if(n>max) max=n;
+	}
+	return max;
+}
 void enqueue(que q,bino p)
 {
 	q->da[++q->rear]=p;
@@ -88,6 +142,126 @@ void search_reverse_hierarchy(bino B)//从下到上 从右到左遍历二叉树�
 		printf("value:%d",p->data);
 	}
 
+}
+ /*       stack t;
+        sta s;
+        s=&t;
+    	t.top=-1;
+*/
+void postorder(int pre[],int in[],int length)//由前序和中序得出后序
+{
+	if(length<1) return;
+	int i=0;
+	while(in[i]!=pre[0]) ++i;
+	postorder(pre+1,in,i);
+	postorder(pre+i+1,in+1+i,length-i-1);
+	//push(s,pre[0]);存入栈。
+	/*
+	 *push(s,pre[0]); 输出
+	 */
+}
+void predorder(int post[],int in[],int length)
+{
+	if(length<1) return;
+	int i=0;
+	while(in[i]!=post[length-1]) ++i;
+	push(s,post[length-1]);
+	preorder(post,in,i);
+	preorder(post+i,in+i+1,length-i-1);
+}
+void delete_x(bino B)
+{
+	if(B)
+	{
+
+		delete_x(B->left);
+		delete_x(B->right);
+		free(B);
+	}
+}
+bino search_x(bino B,int x)
+{
+	queue qu;
+        que q=&qu;
+        q->front=-1;
+        q->rear=-1;
+	bino p=(bino)malloc(sizeof(binode));
+	if(B)
+	{
+		if(B->data==x)
+		{
+			delete_x(B);
+		        exit(0);
+		}
+	
+	enqueue(q,B);
+	do
+	{
+		p=dequeue(q,p);
+		if(p->left)
+		{
+			if(p->left->data==x)
+			{
+				delete_x(p->left);
+				p->left=0;
+			}
+			else
+				enqueue(q,p->left);
+		}
+		if(p->right)
+		{
+			if(p->right->data==x)
+			{
+				delete_x(p->right);
+				p->right=0;
+			}
+			else
+				enqueue(q,p->right);
+		}
+	}while(q->front!=q->rear);
+	}
+	return B;
+}
+void find_ancestor(bino B,int x)
+{
+	stack1 s[10];
+	int top=0;
+	while(B!=0||top!=0)
+	{
+		while(B!=0&&B->data!=x)
+		{
+			s[++top].t=B;
+			s[top].tag=0;
+			B=B->left;
+		}
+		if(B->data==x)
+		{
+			int i;
+			for(i=1;i<=top;i++)
+				printf("%d",s[i].t->data);
+			exit(1);
+		}
+		while(top!=0&&s[top].tag==1)
+			top--;
+		if(top!=0)
+		{
+			s[top].tag=1;
+			B=s[top].t->right;
+		}
+	}
+} 
+void pretopost(int pre[],int start1,int end1,int post[],int start2,int end2)
+{
+	int half;
+	if(end1>=start1)
+	{
+		post[end2]=pre[start1];
+		half=(end1-start1)/2;
+		pretopost(pre,start1+1,start1+half,post,start2,start2+half-1);
+		//将pre左子树转换成post左子树 end start均为下标对照pre post下标思考 不断对半。
+		pretopost(pre,start1+half+1,end1,post,start2+half,end2-1);
+		//将pre右子树转换成post右子树
+	}
 }
 int count_hierarchy(bino B)//非递归记录二叉树层次  
 {
@@ -331,16 +505,16 @@ int main()
 	binode B;
 	bino p,p2;
 	p=createBi();//先序创建二叉树
-	int ret=count_hierarchy(p);
-	//search_hierarchy(p);
-	
+	//int ret=count_hierarchy(p);
+	p2=search_x(p,3);
+	//search_x(p,4);
 	//printf("\n");
 	//search_reverse_hierarchy(p);
 	//p2=delete_x(p,3);
-	//search_post(p);
-	printf("ret:%d \n",ret);
+	//search_post(p2);
+	//printf("ret:%d \n",ret);
 	//p2=swap(p);
-	//search_Mid(p2);
+	 search_Mid(p2);
 
 	//search_Mid(p2);
 	//int h=depth(B);
