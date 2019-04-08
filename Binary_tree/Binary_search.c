@@ -160,12 +160,54 @@ void postorder(int pre[],int in[],int length)//由前序和中序得出后序
 	 *push(s,pre[0]); 输出
 	 */
 }
-void predorder(int post[],int in[],int length)
+bino find_leave(bino B)
+{
+	queue qu;
+	que q=&qu;
+	q->rear=-1;
+	q->front=-1;
+	if(B==0) printf("无叶子节点");
+	enqueue(q,B);
+	bino p=(bino)malloc(sizeof(binode));
+	bino t,head;
+	head=(bino)malloc(sizeof(binode));
+	t=(bino)malloc(sizeof(binode));
+	head->left=0;
+	head->right=0;
+	bino r=(bino)malloc(sizeof(binode));
+	r=head;
+	while(q->front!=q->rear)
+	{
+		p=dequeue(q,p);
+		if(p->left)
+			enqueue(q,p->left);
+		if(p->right)
+			enqueue(q,p->right);
+		if(p->left==0&&p->right==0)
+		{
+			r->right=p;
+			r=p;
+		}
+	}
+	return head;	
+}
+
+
+int num=0;
+int double_node(bino B)
+{
+	if(B==0) return 0;
+	else if(B->left!=0&&B->right!=0)
+		return double_node(B->left)+double_node(B->right)+1;
+	else
+		return double_node(B->left)+double_node(B->right);
+}
+void preorder(int post[],int in[],int length)
 {
 	if(length<1) return;
 	int i=0;
 	while(in[i]!=post[length-1]) ++i;
-	push(s,post[length-1]);
+	//push(s,post[length-1]);
 	preorder(post,in,i);
 	preorder(post+i,in+i+1,length-i-1);
 }
@@ -177,6 +219,20 @@ void delete_x(bino B)
 		delete_x(B->left);
 		delete_x(B->right);
 		free(B);
+	}
+}
+int similar(bino B,bino B1)
+{
+	int lefts,rights;
+	if(B==0&&B1==0)
+	   return 1;
+	else if(B==0||B1==0)
+		return 0;
+	else
+	{
+		lefts=similar(B->left,B1->left);
+		rights=similar(B->right,B1->right);
+		return lefts&&rights;
 	}
 }
 bino search_x(bino B,int x)
@@ -505,8 +561,8 @@ int main()
 	binode B;
 	bino p,p2;
 	p=createBi();//先序创建二叉树
-	//int ret=count_hierarchy(p);
-	p2=search_x(p,3);
+	//int ret=double_node(p);
+	//p2=search_x(p,3);
 	//search_x(p,4);
 	//printf("\n");
 	//search_reverse_hierarchy(p);
@@ -514,7 +570,13 @@ int main()
 	//search_post(p2);
 	//printf("ret:%d \n",ret);
 	//p2=swap(p);
-	 search_Mid(p2);
+	p2=find_leave(p);
+	while(p2!=0)
+	{
+		printf("value:%d\n",p2->data);
+		p2=p2->right;
+	}
+	 //search_Mid(p2);
 
 	//search_Mid(p2);
 	//int h=depth(B);
