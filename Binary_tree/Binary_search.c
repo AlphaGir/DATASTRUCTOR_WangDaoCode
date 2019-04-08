@@ -235,6 +235,29 @@ int similar(bino B,bino B1)
 		return lefts&&rights;
 	}
 }
+/*
+ *在中序线索二叉树里，求指定节点p在后序下的前驱节点
+ *
+ */
+bino inpostpre(bino t,bino p)
+{
+	bino q=(bino)malloc(sizeof(binode));
+	if(p->rtag==0)
+		q=p->right;
+	else if(p->ltag==0)
+		q=p->left;
+	else if(p->left==0)
+		q=0;
+	else
+	{
+		while(p->ltag==1&&p->left!=0)
+			p=p->left;
+		if(p->ltag==0)
+			q=p->left;
+		else q=0;
+	}
+	return q;
+}
 bino search_x(bino B,int x)
 {
 	queue qu;
