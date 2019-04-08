@@ -258,6 +258,42 @@ bino inpostpre(bino t,bino p)
 	}
 	return q;
 }
+/*
+ *二叉树的带权路径长度=叶子结点深度×该叶子节点的权重
+ *
+ */
+int wpl(bino root)
+{
+	return wpl_preorder(root,0);
+}
+int wpl_preorder(bino root,int deep)
+{
+	static int wp1=0;
+	if(root->left==0&&root->right==0)
+		wp1+=deep*root->wight;
+	if(root->left!=0)
+		wpl_preorder(root->left,deep+1);
+	if(root->right!=0)
+		wpl_preorder(root->right,deep+1);
+	return wp1;
+}
+void btree(bino *root)
+{
+	btreetoexp(root,1);
+}
+void btreetoexp(bino *root,int deep)
+{
+	if(root==0) return ;
+	else if(root->left==0&&root->right==0)
+		printf("%s",root->data);
+	else
+	{
+		if(deep>1) printf("(");
+		btreetoexp(root->left,deep+1);
+		btreetoexp(root->right,deep+1);
+		if(deep>1) printf(")");
+	}
+}
 bino search_x(bino B,int x)
 {
 	queue qu;
