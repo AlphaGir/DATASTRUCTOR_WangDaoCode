@@ -295,7 +295,7 @@ void btreetoexp(bino *root,int deep)
 	}
 }*/
 int k=-3276;
-int judege_binarysort(bino t)//二叉排序树中序遍历是一个递增
+/*int judege_binarysort(bino t)//二叉排序树中序遍历是一个递增
 {
 	int b1,b2;
 	if(t==0)
@@ -309,6 +309,28 @@ int judege_binarysort(bino t)//二叉排序树中序遍历是一个递增
 		b2=judege_binarysort(t->right);
 		return b2;
 	}
+}*/
+int i=0;
+int judege(bino B,int *a)
+{
+	if(B)
+	{
+		//a[i]=B->data;
+		judege(B->left,a);
+		a[i++]=B->data;
+		judege(B->right,a);
+	}
+	return i;
+}
+int judege_binary(int *a,int len)
+{
+	int i=0;
+	for(i=0;i<len;i++)
+	{
+		if(a[i]>a[i+1])
+			return 0;
+	}
+	return 1;
 }
 bino search_x(bino B,int x)
 {
@@ -499,7 +521,23 @@ bino createBi()//递归创建二叉树
 	}
 	return B;
 }
-
+int level(bino B,int x)
+{
+	int n=0;
+	if(B!=0)
+	{
+		n++;
+		while(B->data!=x)
+		{
+			if(B->data>x)
+				B=B->left;
+			else if(B->data<x)
+				B=B->right;
+			n++;
+		}
+	}
+	return n;
+}
 bino swap(bino B)
 {
 	if(B)
@@ -512,6 +550,60 @@ bino swap(bino B)
 		swap(B->right);
 	}
 	return B;
+}
+void Judge_avl(bino b,int *balance,int *h)
+{
+	int b1=0,b2=0,h1=0,hr=0;
+	if(b==0)
+	{
+		h=0;
+		balance=1;
+	}
+	else if(b->left==0&&b->right==0)
+	{
+		h=1;
+		balance=1;
+	}
+	else
+	{
+		Judge_avl(b->left,b1,h1);
+		Judge_avl(b->right,b2,hr);
+		h=(h1>hr?h1:hr)+1;
+		if(abs(h1-hr)<2)
+			balance=h1&&hr;
+		else
+			balance=0;
+	}
+}
+void fool(int *a,int len)
+{
+	int min,max;
+	min=a[0];
+	max=a[len-1];
+}
+void max_to_min(bino B,int x)
+{
+	if(B)
+	{
+		max_to_min(B->right,x);
+	        max_to_min(B->left,x);
+		if(B->data>=x)
+			printf("%d",B->data);
+	}
+}
+int i1=0;
+void re(bino B,int k)
+{
+	//int i=0;
+	if(B)
+	{
+		re(B->left,k);
+		 i1++;
+                if(i1==k) printf("%d",B->data);
+		re(B->right,k);
+		//i1++;
+		//if(i1==k) printf("%d",B->data);
+	}
 }
 bino swap1(bino B)
 {
@@ -593,6 +685,34 @@ void search_Mid_no(bino B)
 		}
 	}
 }
+int find_bst(bino B,int x)
+{
+	 queue qu;
+         que q=&qu;
+         q->front=0;
+         q->rear=0;
+	 int level=1;
+	 int kind=1;
+	 if(!B) return 0;
+	 if(B->data==x) return 1;
+	 enqueue(q,B);
+	 bino p=(bino)malloc(sizeof(binode));
+	 while(q->front!=q->rear)
+	 {
+		 p=dequeue(q,p);
+		 if(p->data==x) return level;
+		 if(p->left)
+			 enqueue(q,p->left);
+		 if(p->right)
+			 enqueue(q,p->right);
+		 if(q->front==kind)
+		 {
+			 level++;
+			 kind=q->rear;
+		 }
+	 }
+	 return 0;
+}
 void search_post(bino B)//后序非递归遍历
 {
 	stack t;
@@ -635,9 +755,16 @@ int main()
 {
 	binode B;
 	bino p,p2;
+	p2=(bino)malloc(sizeof(bino));
 	p=createBi();//先序创建二叉树
-        judege_binarysort(p);
-	//printf("ret:%d",*r);
+	int a[maxsize],x,i,ret;
+	//for(i=1;i<5;i++)
+	re(p,3);
+	//printf("%d",p2->data);
+	//x=-1;
+	//x=judege(p,a);
+       // ret=find_bst(p,2);
+	
 	//p2=search_x(p,3);
 	//search_x(p,4);
 	//printf("\n");
