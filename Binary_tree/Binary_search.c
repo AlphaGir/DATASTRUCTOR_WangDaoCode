@@ -239,7 +239,7 @@ int similar(bino B,bino B1)
  *在中序线索二叉树里，求指定节点p在后序下的前驱节点
  *
  */
-bino inpostpre(bino t,bino p)
+/*bino inpostpre(bino t,bino p)
 {
 	bino q=(bino)malloc(sizeof(binode));
 	if(p->rtag==0)
@@ -257,12 +257,12 @@ bino inpostpre(bino t,bino p)
 		else q=0;
 	}
 	return q;
-}
+}*/
 /*
  *二叉树的带权路径长度=叶子结点深度×该叶子节点的权重
  *
  */
-int wpl(bino root)
+/*int wpl(bino root)
 {
 	return wpl_preorder(root,0);
 }
@@ -292,6 +292,22 @@ void btreetoexp(bino *root,int deep)
 		btreetoexp(root->left,deep+1);
 		btreetoexp(root->right,deep+1);
 		if(deep>1) printf(")");
+	}
+}*/
+int k=-3276;
+int judege_binarysort(bino t)//二叉排序树中序遍历是一个递增
+{
+	int b1,b2;
+	if(t==0)
+		return 1;
+	else
+	{
+		b1=judege_binarysort(t->left);
+		if(b1==0||k>=t->data)
+			return 0;
+		k=t->data;
+		b2=judege_binarysort(t->right);
+		return b2;
 	}
 }
 bino search_x(bino B,int x)
@@ -620,7 +636,8 @@ int main()
 	binode B;
 	bino p,p2;
 	p=createBi();//先序创建二叉树
-	//int ret=double_node(p);
+        judege_binarysort(p);
+	//printf("ret:%d",*r);
 	//p2=search_x(p,3);
 	//search_x(p,4);
 	//printf("\n");
@@ -629,12 +646,12 @@ int main()
 	//search_post(p2);
 	//printf("ret:%d \n",ret);
 	//p2=swap(p);
-	p2=find_leave(p);
+	/*p2=find_leave(p);
 	while(p2!=0)
 	{
 		printf("value:%d\n",p2->data);
 		p2=p2->right;
-	}
+	}*/
 	 //search_Mid(p2);
 
 	//search_Mid(p2);
