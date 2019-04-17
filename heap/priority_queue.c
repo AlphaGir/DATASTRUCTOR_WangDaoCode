@@ -23,7 +23,7 @@ void add(int *heap,int e)//插入元素并且保证堆还是小根堆 构造小�
 	heap[n]=e;
 	t=n;
 	key=n;
-	if(n>=2)
+	/*if(n>=2)
 	{
 	for(i=t/2;i>0;i/=2)
 	{
@@ -90,11 +90,198 @@ void add(int *heap,int e)//插入元素并且保证堆还是小根堆 构造小�
 		}
     		        
 	    }	
-	}
+	}*/
+	adjust(heap,key);
 }
-void adjust(int *heap,int key)
+void test(int *heap,int n1,int key)
+{
+	int t=n1;
+	int t1,i;
+	for(i=t/2;i>0;i/=2)
+	{
+		if(heap[i]>heap[key])//根节点大于子节点值
+		{
+			if(key+1<=n1)//如果存在另一个子节点 找到最小的元素 然后交换元素值 交换位置
+			{
+				if(heap[key]<heap[key+1])//min的是key
+				{
+					t1=heap[key];
+					heap[key]=heap[i];
+					heap[i]=t1;
+					key=i;
+				}
+				else//
+				{
+					t1=heap[key+1];
+					heap[key+1]=heap[i];
+					heap[i]=t1;
+					key=i;
+				}
+			}
+			else//不存在另一个子节点
+			{
+				t1=heap[key];
+				heap[key]=heap[i];
+				heap[i]=t1;
+				key=i;
+			}
+
+
+		}
+			else// 根节点小于子节点值
+		{
+			if(key+1<=n1)//当key+1也存在 根节点应该小于两个子节点值
+			{
+				if(heap[key+1]>heap[i]||heap[key+1]>heap[key])//
+				{
+					key=i;
+					break;
+				}
+				else if(heap[key+1]<heap[key])
+				{
+					if(heap[key+1]>heap[i])//
+					{
+						key=i;
+						break;
+					}
+					else
+					{
+						t1=heap[key+1];
+						heap[key+1]=heap[i];
+						heap[i]=t1;
+						key=i;
+					}
+				}
+			}
+			else//key+1子节点不存在
+			{
+				key=i;
+				break;
+
+			}
+		}
+
+	    }
+	}
+void adjust1(int *heap,int s,int m)//假设heap[s+1……m]已经是堆，将heap[s……m]调整为以heap[s]为根的小根堆
 {
 
+	int t,t1,j;
+	t=s;
+	for(j=t/2;j<=m;j*=2)
+	{
+		if(j<m&&heap[j]>heap[j+1])//
+		++j;
+		if(heap[s]<=heap[j]) break;
+		t1=heap[s];
+		heap[s]=heap[j];
+		heap[j]=t1;
+		s=j;
+	}
+
+}
+void sort1(int *heap,int n1)
+{
+	int i,x;
+	for(i=n1;i>1;--i)
+	{
+		x=heap[1];
+		heap[1]=heap[i];
+		heap[i]=x;
+		adjust1(heap,1,i-1);
+	}
+}
+
+void adjust(int *heap,int key)
+{
+	int t,t1,i;
+	t=n;
+	if(n>=2)
+	for(i=t/2;i>0;i/=2)
+	{
+		if(heap[i]>heap[key])//根节点大于子节点值
+		{
+			if(key+1<=n)//如果存在另一个子节点 找到最小的元素 然后交换元素值 交换位置
+			{
+				if(heap[key]<heap[key+1])//min的是key
+				{
+					t1=heap[key];
+					heap[key]=heap[i];
+					heap[i]=t1;
+					key=i;
+				}
+				else
+				{
+					t1=heap[key+1];
+					heap[key+1]=heap[i];
+					heap[i]=t1;
+					key=i;
+				}
+			}
+			else//不存在另一个子节点
+			{
+				t1=heap[key];
+				heap[key]=heap[i];
+				heap[i]=t1;
+				key=i;
+			}
+
+			
+		}
+			else// 根节点小于子节点值
+		{
+			if(key+1<=n)//当key+1也存在 根节点应该小于两个子节点值
+			{
+				if(heap[key+1]>heap[i]||heap[key+1]>heap[key])//
+				{
+					key=i;
+					//break;
+				}
+				else if(heap[key+1]<heap[key])
+				{
+					if(heap[key+1]>heap[i])//
+					{
+						key=i;
+					//	break;
+					}
+					else
+					{
+						t1=heap[key+1];
+						heap[key+1]=heap[i];
+						heap[i]=t1;
+						key=i;
+					}
+				}
+			}
+			else//key+1子节点不存在
+			{
+				key=i;
+				//break;
+
+			}
+		}
+    		        
+	    }
+		
+
+}
+void sort(int *heap,int num)
+{
+	int i,j;
+	int x,x1;
+	x1=num;
+	//j=0;
+	for(i=num;i>0;i--)
+	{
+		x=heap[1];
+		heap[1]=heap[i];
+		heap[i]=x;
+		//print(heap);
+		n--;
+		adjust(heap,i-1);
+		//n--;
+		//print(heap);
+	}
 }
 int peek(int *heap)
 {
@@ -110,8 +297,9 @@ int remove_(int *heap)//直接排序 后移 头部偏移指针
 void print(int *heap)
 {
 	int i;
-	for(i=1;i<n;i++)
+	for(i=1;i<9;i++)
 	printf("%d ",heap[i]);
+	printf("\n");
 }
 int main()
 {
@@ -122,9 +310,16 @@ int main()
 	{
 		add(heap,a[i]);
 		n++;
-		//print(heap);
-		//printf("\n");
+	
 	}
+	
+	
 	peek(heap);
+	print(heap);
+	sort1(heap,8);
+	//sort(heap,8);
+	print(heap);
+	
+	
 
 }
