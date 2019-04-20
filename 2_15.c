@@ -102,6 +102,7 @@ void print(list L)
 }*/
 void merge(list c,list a,list b)
 {
+	//printf("%p %p",*a,*c);
 	list p,h,h1,t;
 	h=(list)malloc(sizeof(link));
 	h1=(list)malloc(sizeof(link));
@@ -138,16 +139,31 @@ void merge(list c,list a,list b)
 		h1=h1->next;
 	h=h->next;
     }
+    printf("%p %p\n",a,c);
+    /*list a1=(list)malloc(sizeof(link));
+    a1=c;
+    a=a1;
+    printf("%p %p %p\n",a1,a,c);
+    //*a1=&c;
+    //a=*a1;
+    */
+    *a=*c;
+
+    
+    
 }
 int main()
 {
 	link p,q,c;
+	//printf("%p %p %p\n",p,q,c);
 	create(&p,5);
 	print(&p);
 	
 	create(&q,3);
 	print(&q);
 	merge(&c,&p,&q);
-	print(&c);
+	//p=c;
+	//printf("%p %p %p\n",p,q,c);
+	print(&p);
 	
 }

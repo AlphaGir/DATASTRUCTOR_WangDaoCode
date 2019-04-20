@@ -1,9 +1,6 @@
 #include<stdio.h>
 #include"list.h"
 #include<stdlib.h>
-/*
- *不断删除最小的
- */
 void delete(list L,int m1,int m2)
 {
 	list p,pre;
@@ -32,26 +29,18 @@ void sort(list L)
 	t=(list)malloc(sizeof(link));
 	t1=(list)malloc(sizeof(link));
 	t2=(list)malloc(sizeof(link));
-	p=L;
+	p=L->next;
+	t=L;
 	q=L->next;
-	int m=q->data;
+	int m=0;
 	//printf("%d\n",m);
-	while(p->next)
+	while(p)
 	{
-		t=p;
-		q=t->next;
-		while(q->next)
-		{      
-			if(q->next->data<t->next->data)
-			t=q;
-			q=q->next;
-		}
-		printf("min:%d\n",t->next->data);
-		t1=t->next;
-		t->next=t1->next;
-		free(t1);
-	}
+		while(q)
+		{
 
+		}
+	}
 }
 int main()
 {

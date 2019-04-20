@@ -6,30 +6,41 @@
 #include<stdlib.h>
 void sort(list L)
 {
-	list p,q;
+	list p,q,k,m;
 	int t;
+	k=(list)malloc(sizeof(link));
 	p=(list)malloc(sizeof(link));
 	q=(list)malloc(sizeof(link));
+	m=(list)malloc(sizeof(link));
 	p=L->next;
 	q=L->next;
-	while(p)
-	{
+	t=q->data;
+
 		while(q)
 		{
-			if(q->next!=0)
+			
+			
+			if(q->data<=t)
 			{
-			if(q->data>=q->next->data)
-			{
-				t=q->next->data;
-				q->next->data=q->data;
-				q->data=t;
+				k=q;//要删掉的节点
+				m=p;//之前节点
+				//q->next->data=q->data;
+				t=q->data;
 			}
-			}
+			p=q;
 			q=q->next;
 		}
-		q=L->next;
-		p=p->next;
-	}
+		if(k==L->next)
+		{
+			L->next=k->next;
+			free(k);
+		}
+		else
+		{
+		m->next=k->next;
+		free(k);
+		}
+		
 }
 int main()
 {

@@ -29,7 +29,6 @@ void add(int *heap,int e)//插入元素并且保证堆还是小根堆 构造小�
 }
 void adjust1(int *heap,int s,int m)//假设heap[s+1……m]已经是堆，将heap[s……m]调整为以heap[s]为根的小根堆
 {
-
 	int t,t1,j;
 	t=s;
 	for(j=t*2;j<=m;j*=2)
@@ -42,7 +41,6 @@ void adjust1(int *heap,int s,int m)//假设heap[s+1……m]已经是堆，将hea
 		heap[j]=t1;
 		s=j;
 	}
-
 }
 void sort1(int *heap,int n1)
 {
@@ -123,11 +121,8 @@ void adjust(int *heap,int key)
 				//break;
 
 			}
-		}
-    		        
+		}	        
 	    }
-		
-
 }
 int peek(int *heap)
 {
@@ -142,7 +137,6 @@ int remove_(int *heap)
 	heap[n]=ret;
 	printf("删除的元素:%d\n",ret);
 	n--;
-	//head++;
 	adjust1(heap,1,n);
 }
 void print(int *heap)
@@ -159,10 +153,7 @@ int main()
 	int a[8]={49,38,65,97,76,13,27,49};
 	for(i=0;i<8;i++)
 		add(heap,a[i]);
-	printf("n=%d top:%d\n",n,heap[1]);
-	//print(heap);
 	add(heap,-1);
-	printf("n=%d top:%d",n,heap[1]);
 	remove_(heap);
 	peek(heap);
 	remove_(heap);
@@ -172,4 +163,5 @@ int main()
 	add(heap,10);
 	remove_(heap);
 	peek(heap);
+	print(heap);
 }	
