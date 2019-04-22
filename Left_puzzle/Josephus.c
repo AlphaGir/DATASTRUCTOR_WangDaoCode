@@ -28,6 +28,8 @@ void create(link* head,int n)
 	r=*head;
 	(*head)->data=1;
 	(*head)->value=1;
+	if(n>=2)
+	{
 	for(i=2;i<=n;i++)
 	{
 		p=(link)malloc(sizeof(node));//
@@ -37,6 +39,7 @@ void create(link* head,int n)
 		r=r->next;
 	}
 	p->next=*head;
+	}
 }
 void delete_(link *head,link v)//
 {
@@ -78,15 +81,13 @@ int Jose(link *head,int m)
 	link q=(link)malloc(sizeof(node));
 	t=*head;
 	q=t;
+	printf("kill:");
 	while(nodesum>1)
 	{
-		//printf("v:%d %d\n",t->value,t->data);
-		q=t;
 		if(t->data==m)
 		{
-			
+			printf("%d->",t->value);
 			t->next->data=1;
-			printf("kill:%d\n",t->value);
 			delete_(head,t);
 			nodesum--;
 		}
@@ -94,7 +95,6 @@ int Jose(link *head,int m)
 		{
 			t->next->data=t->data+1;
 		}
-		//printf("-------------------\n");
 		t=t->next;
 	}
 	return (*head)->value;
@@ -119,12 +119,16 @@ int main()
 	scanf("%d %d",&n,&m);
 	create(&h,n);
 	nodesum=n;
-	print(h);
+	//print(h);
 	//delete_(&h,1);
 	//print(h);
 	//delete_(&h,6);
 	//print(h);
-	int ret=Jose(&h,m);
+	int ret;
+	if(n==1)
+		ret=1;
+	else
+	ret=Jose(&h,m);
 	printf("\nleft:%d",ret);
 	//link p=h->next;
 	//free(h);
