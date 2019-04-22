@@ -13,19 +13,22 @@ typedef struct node
 	int value;//数值
 	struct node *next;
 }node,*link;
-// create 创建一个循环链表  我讨厌链表创建 讨厌链表头插法 尾插法
+// create 创建一个循环链表  
 // delete 删除一个节点
 // jose 主函数循环
-void create(link head,int n)
+int nodesum;
+void create(link* head,int n)
 {
 	link h,r,t,p;
 	int m=n;
 	int i=1;
+	if(*head==0)
+		*head=(link)malloc(sizeof(node));
 	r=(link)malloc(sizeof(node));
-	r=head;
-	head->data=1;
-	head->value=1;
-	for(i=2;i<=n+1;i++)
+	r=*head;
+	(*head)->data=1;
+	(*head)->value=1;
+	for(i=2;i<=n;i++)
 	{
 		p=(link)malloc(sizeof(node));//
 		p->data=0;
@@ -33,84 +36,99 @@ void create(link head,int n)
 		r->next=p;
 		r=r->next;
 	}
-	r->next=head;
+	p->next=*head;
 }
-void delete_(link head,int v)//
+void delete_(link *head,link v)//
 {
 	link n=(link)malloc(sizeof(node));
 	link q=(link)malloc(sizeof(node));
 	link t=(link)malloc(sizeof(node));
-	n=head;
-	if(v==1)
-	{
-		q=n->next;
-		//free(head);
-		printf("%p %p",head,q);
-		free(head);
-		head=q;
-	}
+	link temp=(link)malloc(sizeof(node));
+	
+	if(v==*head)
+  {
+		for(n=*head;n->next!=*head;n=n->next);
+		temp=*head;
+		*head=(*head)->next;
+		n->next=*head;
+		free(temp);
+  }
 	else
-	{
-	while(n->next!=head)
+  {
+	n=*head;
+	while(n->next!=*head)
 	{
 		q=n;
-		if(n->next->value==v)
+		if(n->next==v)
 		{
 		   t=n->next;
-		   n->next=t;
+		   n->next=t->next;
+		   free(t);
 		   break;
 		}
 		n=n->next;
 	}
-	}
+   }
+
 }
 
-/*int Jose(int n,int m)
+int Jose(link *head,int m)
 {
-	node j[n+1];
-	int i,j1,q,p;
-	for(i=1;i<n;i++)
+	link t=(link)malloc(sizeof(node));
+	link q=(link)malloc(sizeof(node));
+	t=*head;
+	q=t;
+	while(nodesum>1)
 	{
-		j[i].data=1;
-		j[i].pos=1;
-		j[i].value=i;
-	}
-	q=1;
-	p=n+1;
-	int count=1;
-	for(i=q;count<p;i++)
-	{
-	
-		if(j[i].data==m)
+		//printf("v:%d %d\n",t->value,t->data);
+		q=t;
+		if(t->data==m)
 		{
-			j[i].pos=0;
-			j[i+1].data=1;
-			count++;
+			
+			t->next->data=1;
+			printf("kill:%d\n",t->value);
+			delete_(head,t);
+			nodesum--;
 		}
 		else
-			j[i+1].data=j[i].data+1;
+		{
+			t->next->data=t->data+1;
+		}
+		//printf("-------------------\n");
+		t=t->next;
 	}
-}*/
+	return (*head)->value;
+}
 void print(link head)
 {
 	link t=(link)malloc(sizeof(node));
 	t=head;
 	while(t->next!=head)
 	{
-		printf("%d ",t->value);
+		printf("%d %d\n",t->value,t->data);
 		t=t->next;
 	}
 	printf("\n");
 }
 int main()
 {
-	link h;
+	link h=0;
 	node head;
-	h=&head;
+	//h=&head;
 	int n,m;
-	scanf("%d",&n);
-	create(h,n);
+	scanf("%d %d",&n,&m);
+	create(&h,n);
+	nodesum=n;
 	print(h);
-	delete_(h,1);
-	//print(&head);
+	//delete_(&h,1);
+	//print(h);
+	//delete_(&h,6);
+	//print(h);
+	int ret=Jose(&h,m);
+	printf("\nleft:%d",ret);
+	//link p=h->next;
+	//free(h);
+	//h=p;
+	//print(h);
+	
 }
