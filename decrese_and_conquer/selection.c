@@ -33,6 +33,20 @@ int quickselect(int *a,int l,int r,int k)
 	else if(s>l+k-1) quickselect(a,l,s-1,k);
 	else quickselect(a,s+1,r,l+k-1-s);
 }
+
+int quickselect1(int *a,int l,int r,int k)
+{
+	int s=lomutoPartion(a,r,l);
+	while(s!=l+k-1)
+	{
+		if(s>l+k-1) s=lomutoPartion(a,s-1,l);
+		else if(s<l+k-1) 
+		{
+			s=lomutoPartion(a,r,s+1);
+		}
+	}
+	return a[s];
+}
 void print(int*a,int len)
 {
 	int i;
@@ -42,8 +56,9 @@ void print(int*a,int len)
 }
 int main()
 {
-	int a[]={12,13,11,14,15,10};
-	int ret=quickselect(a,0,6,2);
+	int a[]={12,12,13,15,16,9};
+	//int s=lomutoPartion(a,6,0);
+	int ret=quickselect1(a,0,6,3);
 	printf("%d\n",ret);
 	print(a,6);
 }
